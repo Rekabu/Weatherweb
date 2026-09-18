@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погода</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            transition: background 0.5s ease;
+            padding: 20px;
+        }
+
+        .bg-sunny   { background: linear-gradient(135deg, #d4a373 0%, #cc9b6d 100%); }
+        .bg-cloudy  { background: linear-gradient(135deg, #6b7a8f 0%, #4a5568 100%); }
+        .bg-rainy   { background: linear-gradient(135deg, #3e4a61 0%, #2d3748 100%); }
+        .bg-snowy   { background: linear-gradient(135deg, #a8b5c4 0%, #8a9aac 100%); }
+        .bg-default { background: linear-gradient(135deg, #5a6b8c 0%, #3d4a63 100%); }
+
+        .weather-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f0f0f0;
+            text-align: center;
+        }
+
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));
+        }
+
+        .temp {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            color: #ffffff;
+        }
+
+        .condition {
+            font-size: 22px;
+            opacity: 0.85;
+            margin-bottom: 5px;
+            color: #e0e0e0;
+        }
+
+        .city {
+            font-size: 18px;
+            opacity: 0.7;
+            margin-bottom: 30px;
+            color: #d0d0d0;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .detail-value {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .detail-label {
+            font-size: 13px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #d0d0d0;
+        }
+
+        .search-form input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 15px 0 0 15px;
+            padding: 12px 18px;
+        }
+
+        .search-form input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-form input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            box-shadow: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .search-form button {
+            border-radius: 0 15px 15px 0;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #f0f0f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .search-form button:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .error-box {
+            background: rgba(180, 60, 60, 0.3);
+            border: 1px solid rgba(180, 60, 60, 0.5);
+            color: #f0f0f0;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .history {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .history-label {
+            font-size: 13px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #d0d0d0;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .history-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: #f0f0f0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .history-item .remove {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 3px;
+        }
+
+        .history-item .remove:hover {
+            color: #ff6b6b;
+        }
+
+        .clear-btn {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(180, 60, 60, 0.3);
+            border: 1px solid rgba(180, 60, 60, 0.5);
+            border-radius: 15px;
+            color: #f0f0f0;
+            text-decoration: none;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .clear-btn:hover {
+            background: rgba(180, 60, 60, 0.5);
+            color: white;
+        }
+
+        .forecast {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .forecast-day {
+            text-align: center;
+            flex: 1;
+        }
+
+        .forecast-date {
+            font-size: 12px;
+            opacity: 0.6;
+            margin-bottom: 5px;
+        }
+
+        .forecast-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+
+        .forecast-temp {
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="
+    {% if weather %}
+        {% if 'Солнечно' in weather.condition or 'Ясно' in weather.condition %}bg-sunny
+        {% elif 'Дождь' in weather.condition or 'Ливень' in weather.condition %}bg-rainy
+        {% elif 'Снег' in weather.condition %}bg-snowy
+        {% else %}bg-cloudy{% endif %}
+    {% else %}bg-default{% endif %}
+">
+
+    <div class="weather-card">
+        <form method="post" class="search-form mb-4">
+            <div class="input-group">
+                <input type="text" name="city" class="form-control"
+                       placeholder="Введи город" required autofocus>
+                <button type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+        {% if error %}
+        <div class="error-box">{{ error }}</div>
+        {% endif %}
+
+        {% if weather %}
+            <img src="{{ weather.icon }}" alt="{{ weather.condition }}" class="weather-icon">
+            <div class="temp">{{ weather.temp }}°C</div>
+            <div class="condition">{{ weather.condition }}</div>
+            <div class="city">📍 {{ weather.city }}</div>
+
+            <div class="details">
+                <div>
+                    <div class="detail-value">{{ weather.humidity }}%</div>
+                    <div class="detail-label">Влажность</div>
+                </div>
+                <div>
+                    <div class="detail-value">{{ weather.wind }}</div>
+                    <div class="detail-label">км/ч</div>
+                </div>
+            </div>
+
+            {% if forecast %}
+            <div class="forecast">
+                {% for day in forecast %}
+                <div class="forecast-day">
+                    <div class="forecast-date">{{ day.date[5:] }}</div>
+                    <img src="{{ day.icon }}" alt="{{ day.condition }}" class="forecast-icon">
+                    <div class="forecast-temp">{{ day.maxtemp }}° / {{ day.mintemp }}°</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endif %}
+
+        {% if session.history %}
+        <div class="history">
+            <div class="history-label">
+                Последние города
+                <a href="/?clear=1" class="clear-btn">Очистить</a>
+            </div>
+            {% for c in session.history %}
+            <span class="history-item">
+                <a href="/?city={{ c }}" style="color: inherit; text-decoration: none;">{{ c }}</a>
+                <a href="/?remove={{ c }}" class="remove">✕</a>
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
