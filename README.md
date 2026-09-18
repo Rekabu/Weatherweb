@@ -3,7 +3,7 @@
 Веб-приложение на Flask — показывает погоду и прогноз на 3 дня.
 
 ## 🚀 Живой сайт
-https://твой-сайт.onrender.com
+https://weatherweb-pow3.onrender.com
 
 ## 🛠 Технологии
 - Python, Flask, requests
