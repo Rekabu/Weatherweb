@@ -1,3 +1,5 @@
+<img width="1920" height="964" alt="Погодный сайт 2" src="https://github.com/user-attachments/assets/94ba035a-7e3d-4815-819a-2ca3513dcbf7" />
+<img width="1920" height="961" alt="Погодный сайт 1" src="https://github.com/user-attachments/assets/da6d222d-0d5f-4deb-bbfe-566e644abe55" />
 # 🌤 Погодное приложение
 
 Веб-приложение на Flask — показывает погоду и прогноз на 3 дня.
